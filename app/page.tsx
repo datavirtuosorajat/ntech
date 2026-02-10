@@ -6,15 +6,15 @@ export default function NyutechHome() {
   const [showEnquiry, setShowEnquiry] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const products = [
+ const products = [
     {
       category: 'Digital Signage',
       items: [
         'Store Front Hanging Screen',
         'Digital Signage (Commercial Screens)',
         'Stretched Display',
-        'Floor‑Standing Video Wall',
-        'Custom Digital Window Displays',
+        'Digital Menu Boards',
+        'LCD Wall',
       ],
     },
     {
@@ -22,8 +22,6 @@ export default function NyutechHome() {
       items: [
         'High Brightness Customized LED Displays',
         'Indoor Fine‑Pitch LED Panels',
-        'Outdoor High‑Reliability Screens',
-        'Curved and Corner‑Edge LED Walls',
       ],
     },
     {
@@ -59,7 +57,7 @@ export default function NyutechHome() {
               NYU<span className="text-blue-400">tech</span>
             </h1>
             <p className="text-xs tracking-[0.3em] text-slate-400 uppercase mt-0.5">
-              Premium AV & Digital Media
+              Premium Commercial Screen
             </p>
           </div>
 
