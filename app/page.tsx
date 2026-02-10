@@ -1,4 +1,6 @@
 'use client';
+import { Resend } from 'resend';
+import { EmailTemplate } from '@/components/EmailTemplate'; // adjust path
 import React, { useState } from 'react';
 
 export default function NyutechHome() {
@@ -242,47 +244,53 @@ export default function NyutechHome() {
                   </div>
 
                   <form
-                    className="space-y-4"
-                    onSubmit={async (e) => {
-                      e.preventDefault();
-                      // ← Add your real form submission logic here (fetch / Formspree / etc.)
-                      setSubmitted(true);
-                    }}
-                  >
-                    <input
-                      name="name"
-                      required
-                      placeholder="Full Name"
-                      className="w-full bg-slate-800 border border-slate-700 px-4 py-3 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    />
-                    <input
-                      name="email"
-                      type="email"
-                      required
-                      placeholder="Email Address"
-                      className="w-full bg-slate-800 border border-slate-700 px-4 py-3 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    />
-                    <input
-                      name="phone"
-                      type="tel"
-                      required
-                      placeholder="Phone Number"
-                      className="w-full bg-slate-800 border border-slate-700 px-4 py-3 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    />
-                    <textarea
-                      name="message"
-                      required
-                      placeholder="Project details (location, display types, approximate budget, quantity...)"
-                      rows={4}
-                      className="w-full bg-slate-800 border border-slate-700 px-4 py-3 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600 resize-none"
-                    />
-                    <button
-                      type="submit"
-                      className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 py-3.5 rounded-xl font-bold uppercase tracking-wide shadow-lg mt-2 transition-all"
-                    >
-                      Submit Enquiry
-                    </button>
-                  </form>
+  className="space-y-4"
+  action={async (formData: FormData) => {
+    'use server'; // ← this makes it a Server Action
+
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
+    const name = formData.get('name') as string;
+    const email = formData.get('email') as string;
+    const phone = formData.get('phone') as string;
+    const message = formData.get('message') as string;
+
+    try {
+      const { data, error } = await resend.emails.send({
+        from: 'NYUtech Enquiry <enquiries@your-verified-domain.com>', // Use your verified domain!
+        to: ['nyutech@hotmail.com'], // your receiving email
+        subject: `New Project Enquiry from ${name}`,
+        react: EmailTemplate({ name, email, phone, message }),
+        // text: `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nMessage: ${message}`, // fallback plain text
+      });
+
+      if (error) {
+        console.error(error);
+        // Optionally show error to user (add state for it)
+        alert('Failed to send enquiry – please try again.');
+        return;
+      }
+
+      setSubmitted(true);
+    } catch (err) {
+      console.error(err);
+      alert('Something went wrong. Please try again later.');
+    }
+  }}
+>
+  {/* your existing inputs stay the same */}
+  <input name="name" required placeholder="Full Name" className="..." />
+  <input name="email" type="email" required placeholder="Email Address" className="..." />
+  <input name="phone" type="tel" required placeholder="Phone Number" className="..." />
+  <textarea name="message" required placeholder="Project details..." rows={4} className="..." />
+
+  <button
+    type="submit"
+    className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 py-3.5 rounded-xl font-bold uppercase tracking-wide shadow-lg mt-2 transition-all"
+  >
+    Submit Enquiry
+  </button>
+</form>
                 </>
               ) : (
                 <div className="text-center py-12">
