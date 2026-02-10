@@ -1,4 +1,5 @@
 'use client';
+'use server';
 import { Resend } from 'resend';
 import { EmailTemplate } from '@/components/EmailTemplate'; // adjust path
 import React, { useState } from 'react';
