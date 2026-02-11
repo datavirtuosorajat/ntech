@@ -1,6 +1,4 @@
 'use client';
-import { Resend } from 'resend';
-import { EmailTemplate } from '@/components/EmailTemplate'; // adjust path
 import React, { useState } from 'react';
 
 export default function NyutechHome() {
@@ -42,7 +40,6 @@ export default function NyutechHome() {
       <div
         className="absolute inset-0 bg-black/80 backdrop-blur-3xl bg-[radial-gradient(circle_at_50%_50%,rgba(37,99,235,0.08),transparent_60%)] pointer-events-none"
       />
-
       <div className="relative z-10">
         {/* HEADER */}
         <header className="border-b border-white/10 py-6 px-6 sm:px-8 flex flex-col sm:flex-row justify-between items-center gap-4 bg-gradient-to-r from-black to-slate-900/90 text-white shadow-lg">
@@ -54,7 +51,6 @@ export default function NyutechHome() {
               Premium Commercial Screens
             </p>
           </div>
-
           <div className="flex flex-col items-center sm:items-end gap-3">
             <a
               href="mailto:nyutech@hotmail.com"
@@ -118,7 +114,6 @@ export default function NyutechHome() {
                 <h4 className="text-3xl md:text-4xl font-bold text-blue-400 mb-8 text-center md:text-left">
                   {category.category}
                 </h4>
-
                 <div className="grid gap-6 md:gap-8 md:grid-cols-2 lg:grid-cols-3">
                   {category.items.map((product, idx) => (
                     <div
@@ -131,7 +126,6 @@ export default function NyutechHome() {
                           [Product Image – {product.name}]
                         </div>
                       </div>
-
                       <div className="flex justify-between items-start mb-5 flex-grow">
                         <h5 className="text-xl md:text-2xl font-bold text-slate-100 group-hover:text-blue-300 transition-colors">
                           {product.name}
@@ -145,7 +139,6 @@ export default function NyutechHome() {
                           </div>
                         </div>
                       </div>
-
                       <button
                         onClick={() => {
                           setShowEnquiry(true);
@@ -173,27 +166,21 @@ export default function NyutechHome() {
               Delivering cutting-edge digital display solutions across Canada
             </p>
           </div>
-
           <div className="prose prose-slate prose-invert max-w-none text-slate-300 text-lg leading-relaxed space-y-6">
             <p>
-              NYUtech is a Vancouver-based provider of premium commercial digital signage, LED displays, and interactive kiosk solutions. 
-              We specialize in high-brightness screens and custom LED walls designed for retail environments, corporate lobbies, restaurants, 
+              NYUtech is a Vancouver-based provider of premium commercial digital signage, LED displays, and interactive kiosk solutions.
+              We specialize in high-brightness screens and custom LED walls designed for retail environments, corporate lobbies, restaurants,
               event spaces, and outdoor applications.
             </p>
-
             <p>
-              With years of experience in the visual communication industry, we help businesses elevate their brand presence through 
-              reliable, high-performance display technology. From single menu boards to large-scale video walls, every project receives 
+              With years of experience in the visual communication industry, we help businesses elevate their brand presence through
+              reliable, high-performance display technology. From single menu boards to large-scale video walls, every project receives
               personalized attention — from initial consultation through to installation and ongoing support.
             </p>
-
             <p>
-              Our mission is simple: deliver displays that perform exceptionally in demanding commercial environments while offering 
+              Our mission is simple: deliver displays that perform exceptionally in demanding commercial environments while offering
               outstanding value and responsive service to every client.
             </p>
-
-            {/* You can add more paragraphs, bullet points, or even a team photo placeholder here */}
-            {/* <p className="mt-8">...</p> */}
           </div>
         </section>
 
@@ -244,53 +231,67 @@ export default function NyutechHome() {
                   </div>
 
                   <form
-  className="space-y-4"
-  action={async (formData: FormData) => {
-    'use server'; // ← this makes it a Server Action
+                    className="space-y-4"
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      const formData = new FormData(e.currentTarget);
 
-    const resend = new Resend(process.env.RESEND_API_KEY);
+                      try {
+                        const response = await fetch(
+                          'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec', // ← REPLACE WITH YOUR ACTUAL GOOGLE APPS SCRIPT URL
+                          {
+                            method: 'POST',
+                            body: formData,
+                          }
+                        );
 
-    const name = formData.get('name') as string;
-    const email = formData.get('email') as string;
-    const phone = formData.get('phone') as string;
-    const message = formData.get('message') as string;
+                        const result = await response.json();
 
-    try {
-      const { data, error } = await resend.emails.send({
-        from: 'NYUtech Enquiry <enquiries@your-verified-domain.com>', // Use your verified domain!
-        to: ['nyutech@hotmail.com'], // your receiving email
-        subject: `New Project Enquiry from ${name}`,
-        react: EmailTemplate({ name, email, phone, message }),
-        // text: `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nMessage: ${message}`, // fallback plain text
-      });
-
-      if (error) {
-        console.error(error);
-        // Optionally show error to user (add state for it)
-        alert('Failed to send enquiry – please try again.');
-        return;
-      }
-
-      setSubmitted(true);
-    } catch (err) {
-      console.error(err);
-      alert('Something went wrong. Please try again later.');
-    }
-  }}
->
-  {/* your existing inputs stay the same */}
-  <input name="name" required placeholder="Full Name" className="..." />
-  <input name="email" type="email" required placeholder="Email Address" className="..." />
-  <input name="phone" type="tel" required placeholder="Phone Number" className="..." />
-  <textarea name="message" required placeholder="Project details..." rows={4} className="..." />
-
-  <button
-    type="submit"
-    className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 py-3.5 rounded-xl font-bold uppercase tracking-wide shadow-lg mt-2 transition-all"
-  >
-    Submit Enquiry
-  </button>
-</form>
+                        if (result.success) {
+                          setSubmitted(true);
+                        } else {
+                          alert('Failed to send enquiry: ' + (result.error || 'Unknown error'));
+                        }
+                      } catch (err) {
+                        console.error(err);
+                        alert('Network error – please check your connection and try again.');
+                      }
+                    }}
+                  >
+                    <input
+                      name="name"
+                      required
+                      placeholder="Full Name"
+                      className="w-full bg-slate-800 border border-slate-700 px-4 py-3 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    />
+                    <input
+                      name="email"
+                      type="email"
+                      required
+                      placeholder="Email Address"
+                      className="w-full bg-slate-800 border border-slate-700 px-4 py-3 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    />
+                    <input
+                      name="phone"
+                      type="tel"
+                      required
+                      placeholder="Phone Number"
+                      className="w-full bg-slate-800 border border-slate-700 px-4 py-3 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    />
+                    <textarea
+                      name="message"
+                      required
+                      placeholder="Project details (location, display types, approximate budget, quantity...)"
+                      rows={4}
+                      className="w-full bg-slate-800 border border-slate-700 px-4 py-3 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600 resize-none"
+                    />
+                    <button
+                      type="submit"
+                      className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 py-3.5 rounded-xl font-bold uppercase tracking-wide shadow-lg mt-2 transition-all"
+                    >
+                      Submit Enquiry
+                    </button>
+                  </form>
                 </>
               ) : (
                 <div className="text-center py-12">
