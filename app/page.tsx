@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 export default function NyutechHome() {
   const [showEnquiry, setShowEnquiry] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const products = [
     {
@@ -36,27 +37,32 @@ export default function NyutechHome() {
 
   const handleEnquirySubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
+
     const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries());
 
     try {
-      const response = await fetch(
-        'https://script.google.com/macros/s/AKfycbyW7jCFrHJ5W9DmPMQ7l0i4VCpan5l2hogOS7QO2s8w8xhjtNDmUzgVY-Z9CSjZVAI/exec',
-        {
-          method: 'POST',
-          body: formData,
-        }
-      );
+      const response = await fetch('/api/enquiry', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
 
       const result = await response.json();
 
       if (result.success) {
         setSubmitted(true);
       } else {
-        alert('Failed to send: ' + (result.error || 'Unknown error'));
+        alert('Failed to send enquiry: ' + (result.error || 'Unknown error'));
       }
     } catch (err) {
       console.error('Submission error:', err);
-      alert('Network issue – please try again or contact support.');
+      alert('Network issue – please check your connection and try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -76,17 +82,11 @@ export default function NyutechHome() {
             </p>
           </div>
           <div className="flex flex-col items-center sm:items-end gap-3">
-            <a
-              href="mailto:nyutech@hotmail.com"
-              className="text-sm font-semibold hover:text-blue-300 transition-colors"
-            >
+            <a href="mailto:nyutech@hotmail.com" className="text-sm font-semibold hover:text-blue-300 transition-colors">
               nyutech@hotmail.com
             </a>
             <button
-              onClick={() => {
-                setShowEnquiry(true);
-                setSubmitted(false);
-              }}
+              onClick={() => { setShowEnquiry(true); setSubmitted(false); }}
               className="bg-blue-600 hover:bg-blue-500 text-white text-sm px-7 py-2.5 rounded-full font-bold uppercase tracking-wider shadow-md transition-all"
             >
               Project Enquiry
@@ -108,10 +108,7 @@ export default function NyutechHome() {
               Premium screens, advanced LED modules, and interactive displays for retail, corporate, and events.
             </p>
             <button
-              onClick={() => {
-                setShowEnquiry(true);
-                setSubmitted(false);
-              }}
+              onClick={() => { setShowEnquiry(true); setSubmitted(false); }}
               className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white px-8 py-4 rounded-full text-base font-bold uppercase tracking-wide shadow-xl shadow-blue-600/20 hover:scale-105 transition-all duration-300"
             >
               Book a FREE Consultation
@@ -122,13 +119,12 @@ export default function NyutechHome() {
         {/* PRODUCTS */}
         <section className="py-16 sm:py-20 px-6 md:px-10 max-w-7xl mx-auto">
           <div className="text-center mb-12 md:mb-16">
-            <h3 className="text-4xl md:text-5xl font-bold text-slate-100 tracking-tight">
-              Our Products
-            </h3>
+            <h3 className="text-4xl md:text-5xl font-bold text-slate-100 tracking-tight">Our Products</h3>
             <p className="text-slate-400 text-lg md:text-xl mt-4 max-w-3xl mx-auto">
               High-brightness commercial displays and modular LED solutions trusted by premium brands.
             </p>
           </div>
+
           <div className="space-y-16 md:space-y-20">
             {products.map((category, catIndex) => (
               <div key={catIndex}>
@@ -151,19 +147,12 @@ export default function NyutechHome() {
                           {product.name}
                         </h5>
                         <div className="text-right shrink-0 ml-4">
-                          <div className="text-xl md:text-2xl font-bold text-green-400">
-                            {product.price}
-                          </div>
-                          <div className="text-xs text-slate-500 uppercase tracking-wide mt-0.5">
-                            per unit
-                          </div>
+                          <div className="text-xl md:text-2xl font-bold text-green-400">{product.price}</div>
+                          <div className="text-xs text-slate-500 uppercase tracking-wide mt-0.5">per unit</div>
                         </div>
                       </div>
                       <button
-                        onClick={() => {
-                          setShowEnquiry(true);
-                          setSubmitted(false);
-                        }}
+                        onClick={() => { setShowEnquiry(true); setSubmitted(false); }}
                         className="mt-auto bg-gradient-to-r from-blue-700 to-blue-600 hover:from-blue-600 hover:to-blue-500 text-white py-3 px-6 rounded-xl font-semibold text-sm uppercase tracking-wide shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-200"
                       >
                         Get Quote
@@ -179,54 +168,27 @@ export default function NyutechHome() {
         {/* ABOUT US */}
         <section className="py-16 sm:py-20 px-6 md:px-10 max-w-6xl mx-auto border-t border-slate-800/50">
           <div className="text-center mb-10 md:mb-14">
-            <h3 className="text-4xl md:text-5xl font-bold text-slate-100 tracking-tight">
-              About Us
-            </h3>
+            <h3 className="text-4xl md:text-5xl font-bold text-slate-100 tracking-tight">About Us</h3>
             <p className="text-slate-400 text-lg md:text-xl mt-4 max-w-3xl mx-auto">
               Delivering cutting-edge digital display solutions across Canada
             </p>
           </div>
           <div className="prose prose-slate prose-invert max-w-none text-slate-300 text-lg leading-relaxed space-y-6">
-            {/* You can edit this copy freely */}
-            <p>
-              NYUtech is a Vancouver-based provider of premium commercial digital signage, LED displays,
-              and interactive kiosk solutions. We specialize in high-brightness screens and custom LED walls
-              designed for retail environments, corporate lobbies, restaurants, event spaces, and outdoor
-              applications.
-            </p>
-            <p>
-              With years of experience in the visual communication industry, we help businesses elevate their
-              brand presence through reliable, high-performance display technology. From single menu boards
-              to large-scale video walls, every project receives personalized attention — from initial
-              consultation through to installation and ongoing support.
-            </p>
-            <p>
-              Our mission is simple: deliver displays that perform exceptionally in demanding commercial
-              environments while offering outstanding value and responsive service to every client.
-            </p>
+            <p>NYUtech is a Vancouver-based provider of premium commercial digital signage, LED displays, and interactive kiosk solutions. We specialize in high-brightness screens and custom LED walls designed for retail environments, corporate lobbies, restaurants, event spaces, and outdoor applications.</p>
+            <p>With years of experience in the visual communication industry, we help businesses elevate their brand presence through reliable, high-performance display technology. From single menu boards to large-scale video walls, every project receives personalized attention — from initial consultation through to installation and ongoing support.</p>
+            <p>Our mission is simple: deliver displays that perform exceptionally in demanding commercial environments while offering outstanding value and responsive service to every client.</p>
           </div>
         </section>
 
         {/* FOOTER */}
         <footer className="bg-slate-950 text-slate-500 text-center py-10 text-sm border-t border-slate-800/50">
-          <p>
-            © {new Date().getFullYear()}{' '}
-            <span className="text-blue-400 font-medium">NYUtech</span> Digital Media Solutions
-          </p>
+          <p>© {new Date().getFullYear()} <span className="text-blue-400 font-medium">NYUtech</span> Digital Media Solutions</p>
           <p className="mt-2">
-            <a
-              href="https://www.nyutech.ca"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-blue-300 transition-colors"
-            >
+            <a href="https://www.nyutech.ca" target="_blank" rel="noopener noreferrer" className="hover:text-blue-300 transition-colors">
               www.nyutech.ca
             </a>
             {' '}•{' '}
-            <a
-              href="mailto:nyutech@hotmail.com"
-              className="hover:text-blue-300 transition-colors"
-            >
+            <a href="mailto:nyutech@hotmail.com" className="hover:text-blue-300 transition-colors">
               nyutech@hotmail.com
             </a>
           </p>
@@ -253,26 +215,9 @@ export default function NyutechHome() {
                   </div>
 
                   <form className="space-y-4" onSubmit={handleEnquirySubmit}>
-                    <input
-                      name="name"
-                      required
-                      placeholder="Full Name"
-                      className="w-full bg-slate-800 border border-slate-700 px-4 py-3 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    />
-                    <input
-                      name="email"
-                      type="email"
-                      required
-                      placeholder="Email Address"
-                      className="w-full bg-slate-800 border border-slate-700 px-4 py-3 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    />
-                    <input
-                      name="phone"
-                      type="tel"
-                      required
-                      placeholder="Phone Number"
-                      className="w-full bg-slate-800 border border-slate-700 px-4 py-3 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    />
+                    <input name="name" required placeholder="Full Name" className="w-full bg-slate-800 border border-slate-700 px-4 py-3 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600" />
+                    <input name="email" type="email" required placeholder="Email Address" className="w-full bg-slate-800 border border-slate-700 px-4 py-3 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600" />
+                    <input name="phone" type="tel" required placeholder="Phone Number" className="w-full bg-slate-800 border border-slate-700 px-4 py-3 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600" />
                     <textarea
                       name="message"
                       required
@@ -282,27 +227,20 @@ export default function NyutechHome() {
                     />
                     <button
                       type="submit"
-                      className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 py-3.5 rounded-xl font-bold uppercase tracking-wide shadow-lg mt-2 transition-all"
+                      disabled={isSubmitting}
+                      className={`w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 py-3.5 rounded-xl font-bold uppercase tracking-wide shadow-lg mt-2 transition-all ${
+                        isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
+                      }`}
                     >
-                      Submit Enquiry
+                      {isSubmitting ? 'Sending...' : 'Submit Enquiry'}
                     </button>
                   </form>
                 </>
               ) : (
                 <div className="text-center py-12">
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-500/15 mb-5">
-                    <svg
-                      className="h-8 w-8 text-blue-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2.5}
-                        d="M5 13l4 4L19 7"
-                      />
+                    <svg className="h-8 w-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
                   <h3 className="text-2xl font-bold text-blue-300 mb-3">Thank You!</h3>
