@@ -5,7 +5,7 @@ import path from 'path';
 const filePath = path.join(process.cwd(), 'data', 'enquiries.json');
 
 // 👈 YOUR GOOGLE APPS SCRIPT URL HERE
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec'; 
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyW7jCFrHJ5W9DmPMQ7l0i4VCpan5l2hogOS7QO2s8w8xhjtNDmUzgVY-Z9CSjZVAI/exec'; 
 
 export async function POST(req: Request) {
   try {
