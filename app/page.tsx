@@ -9,27 +9,27 @@ export default function NyutechHome() {
     {
       category: 'Digital Signage',
       items: [
-        { name: 'Store Front Hanging Screen', price: 'From $1,499' },
-        { name: 'Digital Signage (Commercial Screens)', price: 'From $480' },
-        { name: 'Stretched Display', price: 'From $890' },
-        { name: 'Digital Menu Boards', price: 'From $650' },
-        { name: 'LCD Wall', price: 'From $2,100' },
+        { name: 'Store Front Hanging Screen', price: 'Starting From $1,499' },
+        { name: 'Digital Signage (Commercial Screens)', price: 'Starting From $480' },
+        { name: 'Stretched Display', price: 'Starting From $890' },
+        { name: 'Digital Menu Boards', price: 'Starting From $650' },
+        { name: 'LCD Wall', price: 'Starting From $2,100' },
       ],
     },
     {
       category: 'LED Modules & Walls',
       items: [
-        { name: 'High Brightness Customized LED Displays', price: 'From $1,500' },
-        { name: 'Indoor Fine‑Pitch LED Panels', price: 'From $2,450' },
+        { name: 'High Brightness Customized LED Displays', price: 'Starting From $1,500' },
+        { name: 'Indoor Fine‑Pitch LED Panels', price: 'Starting From $2,450' },
       ],
     },
     {
       category: 'Digital Standee & Kiosks',
       items: [
-        { name: 'T‑Type Digital Standee (Indoor & Outdoor)', price: 'From $1,190' },
-        { name: 'A‑Type Digital Standee (Indoor & Outdoor)', price: 'From $599' },
-        { name: 'Touch‑Screen Info Kiosks', price: 'From $2,480' },
-        { name: 'AI‑Powered Interactive Displays', price: 'From $1,980' },
+        { name: 'T‑Type Digital Standee (Indoor & Outdoor)', price: 'Starting From $1,190' },
+        { name: 'A‑Type Digital Standee (Indoor & Outdoor)', price: 'Starting From $599' },
+        { name: 'Touch‑Screen Info Kiosks', price: 'Starting From $2,480' },
+        { name: 'AI‑Powered Interactive Displays', price: 'Starting From $1,980' },
       ],
     },
   ];
@@ -40,7 +40,7 @@ export default function NyutechHome() {
 
     try {
       const response = await fetch(
-        'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec', // ← PASTE YOUR REAL GOOGLE APPS SCRIPT URL HERE
+        'https://script.google.com/macros/s/AKfycbyW7jCFrHJ5W9DmPMQ7l0i4VCpan5l2hogOS7QO2s8w8xhjtNDmUzgVY-Z9CSjZVAI/exec', // ← PASTE YOUR REAL GOOGLE APPS SCRIPT URL HERE
         {
           method: 'POST',
           body: formData,
