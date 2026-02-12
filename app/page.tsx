@@ -32,7 +32,7 @@ export default function NyutechHome() {
         { name: 'AI‑Powered Interactive Displays', price: 'Starting From $1,980' },
       ],
     },
-  ];
+    };
 
   const handleEnquirySubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
