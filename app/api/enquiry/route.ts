@@ -1,7 +1,7 @@
 // app/api/enquiry/route.ts
 import { NextResponse } from 'next/server';
 
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyW7jCFrHJ5W9DmPMQ7l0i4VCpan5l2hogOS7QO2s8w8xhjtNDmUzgVY-Z9CSjZVAI/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/library/d/1_QVgYoI2u3spBba0wfG09hTqQ9QbQGcxA_MHX_7CgyP474NdAyzEG4cQ/2';
 
 export async function POST(request: Request) {
   try {
