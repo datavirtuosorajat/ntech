@@ -64,7 +64,7 @@ const handleEnquirySubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   } catch (err: unknown) {
     console.error('Direct fetch error:', err);
 
-    // This is the safe way to access .message on unknown
+    // Type guard: safely get message only if it's an Error object
     const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
     alert('Failed to reach Google Script: ' + errorMessage);
   } finally {
