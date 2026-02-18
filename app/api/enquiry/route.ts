@@ -1,7 +1,7 @@
 // app/api/enquiry/route.ts
 import { NextResponse } from 'next/server';
 
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/library/d/1jKxGM15wg61U7cuAQE0oz9jEf15s7LoxRBHka-UtmRtT-NMswn_uPqtQ/2'; // ← PASTE YOUR FULL NEW /exec URL HERE – ALL ON ONE LINE
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwSjLOjkV1WathIg_wkn2r-WjRGocgx5LqDMJBrrqqKs5EmYTdx06kheXE6rHJ6qy6ntg/exec'; // ← PASTE YOUR FULL NEW /exec URL HERE – ALL ON ONE LINE
 
 export async function POST(request: Request) {
   try {
