@@ -35,7 +35,7 @@ export default function NyutechHome() {
     },
   ];
 
- const handleEnquirySubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+const handleEnquirySubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   setIsSubmitting(true);
 
@@ -64,8 +64,8 @@ export default function NyutechHome() {
   } catch (err: unknown) {
     console.error('Direct fetch error:', err);
 
-    // Safely handle the unknown type
-    const errorMessage = err instanceof Error ? err.message : String(err) || 'Unknown error';
+    // This is the safe way to access .message on unknown
+    const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
     alert('Failed to reach Google Script: ' + errorMessage);
   } finally {
     setIsSubmitting(false);
