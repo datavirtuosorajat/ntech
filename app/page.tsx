@@ -35,7 +35,7 @@ export default function NyutechHome() {
     },
   ];
 
-  const handleEnquirySubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+ const handleEnquirySubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   setIsSubmitting(true);
 
@@ -43,7 +43,7 @@ export default function NyutechHome() {
 
   try {
     const response = await fetch(
-      'https://script.google.com/macros/s/AKfycbwSjLOjkV1WathIg_wkn2r-WjRGocgx5LqDMJBrrqqKs5EmYTdx06kheXE6rHJ6qy6ntg/exec', // ← your latest /exec URL
+      'https://script.google.com/macros/s/AKfycbwSjLOjkV1WathIg_wkn2r-WjRGocgx5LqDMJBrrqqKs5EmYTdx06kheXE6rHJ6qy6ntg/exec',
       {
         method: 'POST',
         body: formData,
@@ -63,13 +63,14 @@ export default function NyutechHome() {
     }
   } catch (err: unknown) {
     console.error('Direct fetch error:', err);
-    const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+
+    // Safely handle the unknown type
+    const errorMessage = err instanceof Error ? err.message : String(err) || 'Unknown error';
     alert('Failed to reach Google Script: ' + errorMessage);
   } finally {
     setIsSubmitting(false);
   }
 };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black text-slate-200 font-sans overflow-x-hidden relative">
       <div className="absolute inset-0 bg-black/80 backdrop-blur-3xl bg-[radial-gradient(circle_at_50%_50%,rgba(37,99,235,0.08),transparent_60%)] pointer-events-none" />
