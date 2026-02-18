@@ -1,18 +1,15 @@
 // app/api/enquiry/route.ts
 import { NextResponse } from 'next/server';
 
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/library/d/1jKxGM15wg61U7cuAQE0oz9jEf15s7LoxRBHka-UtmRtT-NMswn_uPqtQ/2' ;  
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/library/d/1jKxGM15wg61U7cuAQE0oz9jEf15s7LoxRBHka-UtmRtT-NMswn_uPqtQ/2'; // ← PASTE YOUR FULL NEW /exec URL HERE – ALL ON ONE LINE
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
+    const body = await request.formData(); // Use formData() since your page sends FormData
 
     const response = await fetch(GOOGLE_SCRIPT_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
+      body, // Pass the FormData directly – Google Script handles it well
     });
 
     if (!response.ok) {
