@@ -46,12 +46,12 @@ export default function NyutechHome() {
       'https://script.google.com/macros/s/AKfycbwSjLOjkV1WathIg_wkn2r-WjRGocgx5LqDMJBrrqqKs5EmYTdx06kheXE6rHJ6qy6ntg/exec', // ← your latest /exec URL
       {
         method: 'POST',
-        body: formData, // send raw FormData – no headers, no JSON
+        body: formData,
       }
     );
 
     if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
+      throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
     const result = await response.json();
@@ -61,9 +61,10 @@ export default function NyutechHome() {
     } else {
       alert('Failed: ' + (result.error || 'No success flag from script'));
     }
-  } catch (err) {
+  } catch (err: unknown) {
     console.error('Direct fetch error:', err);
-    alert('Failed to reach Google Script: ' + (err.message || 'Check console for details'));
+    const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+    alert('Failed to reach Google Script: ' + errorMessage);
   } finally {
     setIsSubmitting(false);
   }
