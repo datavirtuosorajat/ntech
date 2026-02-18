@@ -35,46 +35,44 @@ export default function NyutechHome() {
     },
   ];
 
-const handleEnquirySubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  setIsSubmitting(true);
+  const handleEnquirySubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
 
-  const formData = new FormData(e.currentTarget);
+    const formData = new FormData(e.currentTarget);
 
-  try {
-    const response = await fetch(
-      'https://script.google.com/macros/s/AKfycbwSjLOjkV1WathIg_wkn2r-WjRGocgx5LqDMJBrrqqKs5EmYTdx06kheXE6rHJ6qy6ntg/exec',
-      {
-        method: 'POST',
-        body: formData,
+    try {
+      const response = await fetch(
+        'https://script.google.com/macros/s/AKfycbwSjLOjkV1WathIg_wkn2r-WjRGocgx5LqDMJBrrqqKs5EmYTdx06kheXE6rHJ6qy6ntg/exec',
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
-    );
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+      const result = await response.json();
+
+      if (result.success) {
+        setSubmitted(true);
+      } else {
+        alert('Failed: ' + (result.error || 'No success flag from script'));
+      }
+    } catch (err: unknown) {
+      console.error('Direct fetch error:', err);
+      const message = err instanceof Error ? err.message : 'Unknown error occurred';
+      alert('Failed to reach Google Script: ' + message);
+    } finally {
+      setIsSubmitting(false);
     }
+  };
 
-    const result = await response.json();
-
-    if (result.success) {
-      setSubmitted(true);
-    } else {
-      alert('Failed: ' + (result.error || 'No success flag from script'));
-    }
-  } catch (err: unknown) {
-    console.error('Direct fetch error:', err);
-
-    // Type guard: safely get message only if it's an Error object
-    const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
-    alert('Failed to reach Google Script: ' + errorMessage);
-  } finally {
-    setIsSubmitting(false);
-  }
-};
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black text-slate-200 font-sans overflow-x-hidden relative">
       <div className="absolute inset-0 bg-black/80 backdrop-blur-3xl bg-[radial-gradient(circle_at_50%_50%,rgba(37,99,235,0.08),transparent_60%)] pointer-events-none" />
-
       <div className="relative z-10">
         {/* HEADER */}
         <header className="border-b border-white/10 py-6 px-6 sm:px-8 flex flex-col sm:flex-row justify-between items-center gap-4 bg-gradient-to-r from-black to-slate-900/90 text-white shadow-lg">
@@ -87,11 +85,17 @@ const handleEnquirySubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             </p>
           </div>
           <div className="flex flex-col items-center sm:items-end gap-3">
-            <a href="mailto:nyutech@hotmail.com" className="text-sm font-semibold hover:text-blue-300 transition-colors">
+            <a
+              href="mailto:nyutech@hotmail.com"
+              className="text-sm font-semibold hover:text-blue-300 transition-colors"
+            >
               nyutech@hotmail.com
             </a>
             <button
-              onClick={() => { setShowEnquiry(true); setSubmitted(false); }}
+              onClick={() => {
+                setShowEnquiry(true);
+                setSubmitted(false);
+              }}
               className="bg-blue-600 hover:bg-blue-500 text-white text-sm px-7 py-2.5 rounded-full font-bold uppercase tracking-wider shadow-md transition-all"
             >
               Project Enquiry
@@ -110,10 +114,14 @@ const handleEnquirySubmit = async (e: React.FormEvent<HTMLFormElement>) => {
               Digital Signage <span className="text-blue-400">That Shines</span>
             </h2>
             <p className="text-lg sm:text-xl text-slate-300 italic mb-8 max-w-3xl mx-auto">
-              Premium screens, advanced LED modules, and interactive displays for retail, corporate, and events.
+              Premium screens, advanced LED modules, and interactive displays for retail, corporate, and
+              events.
             </p>
             <button
-              onClick={() => { setShowEnquiry(true); setSubmitted(false); }}
+              onClick={() => {
+                setShowEnquiry(true);
+                setSubmitted(false);
+              }}
               className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white px-8 py-4 rounded-full text-base font-bold uppercase tracking-wide shadow-xl shadow-blue-600/20 hover:scale-105 transition-all duration-300"
             >
               Book a FREE Consultation
@@ -129,7 +137,6 @@ const handleEnquirySubmit = async (e: React.FormEvent<HTMLFormElement>) => {
               High-brightness commercial displays and modular LED solutions trusted by premium brands.
             </p>
           </div>
-
           <div className="space-y-16 md:space-y-20">
             {products.map((category, catIndex) => (
               <div key={catIndex}>
@@ -152,12 +159,19 @@ const handleEnquirySubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                           {product.name}
                         </h5>
                         <div className="text-right shrink-0 ml-4">
-                          <div className="text-xl md:text-2xl font-bold text-green-400">{product.price}</div>
-                          <div className="text-xs text-slate-500 uppercase tracking-wide mt-0.5">per unit</div>
+                          <div className="text-xl md:text-2xl font-bold text-green-400">
+                            {product.price}
+                          </div>
+                          <div className="text-xs text-slate-500 uppercase tracking-wide mt-0.5">
+                            per unit
+                          </div>
                         </div>
                       </div>
                       <button
-                        onClick={() => { setShowEnquiry(true); setSubmitted(false); }}
+                        onClick={() => {
+                          setShowEnquiry(true);
+                          setSubmitted(false);
+                        }}
                         className="mt-auto bg-gradient-to-r from-blue-700 to-blue-600 hover:from-blue-600 hover:to-blue-500 text-white py-3 px-6 rounded-xl font-semibold text-sm uppercase tracking-wide shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-200"
                       >
                         Get Quote
@@ -179,21 +193,45 @@ const handleEnquirySubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             </p>
           </div>
           <div className="prose prose-slate prose-invert max-w-none text-slate-300 text-lg leading-relaxed space-y-6">
-            <p>NYUtech is a Vancouver-based provider of premium commercial digital signage, LED displays, and interactive kiosk solutions. We specialize in high-brightness screens and custom LED walls designed for retail environments, corporate lobbies, restaurants, event spaces, and outdoor applications.</p>
-            <p>With years of experience in the visual communication industry, we help businesses elevate their brand presence through reliable, high-performance display technology. From single menu boards to large-scale video walls, every project receives personalized attention — from initial consultation through to installation and ongoing support.</p>
-            <p>Our mission is simple: deliver displays that perform exceptionally in demanding commercial environments while offering outstanding value and responsive service to every client.</p>
+            <p>
+              NYUtech is a Vancouver-based provider of premium commercial digital signage, LED displays, and
+              interactive kiosk solutions. We specialize in high-brightness screens and custom LED walls
+              designed for retail environments, corporate lobbies, restaurants, event spaces, and outdoor
+              applications.
+            </p>
+            <p>
+              With years of experience in the visual communication industry, we help businesses elevate their
+              brand presence through reliable, high-performance display technology. From single menu boards
+              to large-scale video walls, every project receives personalized attention — from initial
+              consultation through to installation and ongoing support.
+            </p>
+            <p>
+              Our mission is simple: deliver displays that perform exceptionally in demanding commercial
+              environments while offering outstanding value and responsive service to every client.
+            </p>
           </div>
         </section>
 
         {/* FOOTER */}
         <footer className="bg-slate-950 text-slate-500 text-center py-10 text-sm border-t border-slate-800/50">
-          <p>© {new Date().getFullYear()} <span className="text-blue-400 font-medium">NYUtech</span> Digital Media Solutions</p>
+          <p>
+            © {new Date().getFullYear()}{' '}
+            <span className="text-blue-400 font-medium">NYUtech</span> Digital Media Solutions
+          </p>
           <p className="mt-2">
-            <a href="https://www.nyutech.ca" target="_blank" rel="noopener noreferrer" className="hover:text-blue-300 transition-colors">
+            <a
+              href="https://www.nyutech.ca"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-blue-300 transition-colors"
+            >
               www.nyutech.ca
             </a>
             {' '}•{' '}
-            <a href="mailto:nyutech@hotmail.com" className="hover:text-blue-300 transition-colors">
+            <a
+              href="mailto:nyutech@hotmail.com"
+              className="hover:text-blue-300 transition-colors"
+            >
               nyutech@hotmail.com
             </a>
           </p>
@@ -220,9 +258,26 @@ const handleEnquirySubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                   </div>
 
                   <form className="space-y-4" onSubmit={handleEnquirySubmit}>
-                    <input name="name" required placeholder="Full Name" className="w-full bg-slate-800 border border-slate-700 px-4 py-3 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600" />
-                    <input name="email" type="email" required placeholder="Email Address" className="w-full bg-slate-800 border border-slate-700 px-4 py-3 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600" />
-                    <input name="phone" type="tel" required placeholder="Phone Number" className="w-full bg-slate-800 border border-slate-700 px-4 py-3 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600" />
+                    <input
+                      name="name"
+                      required
+                      placeholder="Full Name"
+                      className="w-full bg-slate-800 border border-slate-700 px-4 py-3 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    />
+                    <input
+                      name="email"
+                      type="email"
+                      required
+                      placeholder="Email Address"
+                      className="w-full bg-slate-800 border border-slate-700 px-4 py-3 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    />
+                    <input
+                      name="phone"
+                      type="tel"
+                      required
+                      placeholder="Phone Number"
+                      className="w-full bg-slate-800 border border-slate-700 px-4 py-3 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    />
                     <textarea
                       name="message"
                       required
@@ -244,8 +299,18 @@ const handleEnquirySubmit = async (e: React.FormEvent<HTMLFormElement>) => {
               ) : (
                 <div className="text-center py-12">
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-500/15 mb-5">
-                    <svg className="h-8 w-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                    <svg
+                      className="h-8 w-8 text-blue-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2.5}
+                        d="M5 13l4 4L19 7"
+                      />
                     </svg>
                   </div>
                   <h3 className="text-2xl font-bold text-blue-300 mb-3">Thank You!</h3>
