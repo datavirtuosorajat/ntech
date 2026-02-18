@@ -36,35 +36,38 @@ export default function NyutechHome() {
   ];
 
   const handleEnquirySubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  e.preventDefault();
+  setIsSubmitting(true);
 
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
+  const formData = new FormData(e.currentTarget);
 
-    try {
-      const response = await fetch('/api/enquiry', {
+  try {
+    const response = await fetch(
+      'https://script.google.com/macros/s/AKfycbwSjLOjkV1WathIg_wkn2r-WjRGocgx5LqDMJBrrqqKs5EmYTdx06kheXE6rHJ6qy6ntg/exec', // ← your latest /exec URL
+      {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        setSubmitted(true);
-      } else {
-        alert('Failed to send enquiry: ' + (result.error || 'Unknown error'));
+        body: formData, // send raw FormData – no headers, no JSON
       }
-    } catch (err) {
-      console.error('Submission error:', err);
-      alert('Network issue – please check your connection and try again.');
-    } finally {
-      setIsSubmitting(false);
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
     }
-  };
+
+    const result = await response.json();
+
+    if (result.success) {
+      setSubmitted(true);
+    } else {
+      alert('Failed: ' + (result.error || 'No success flag from script'));
+    }
+  } catch (err) {
+    console.error('Direct fetch error:', err);
+    alert('Failed to reach Google Script: ' + (err.message || 'Check console for details'));
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black text-slate-200 font-sans overflow-x-hidden relative">
